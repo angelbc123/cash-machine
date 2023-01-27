@@ -16,8 +16,9 @@ class AlphaAndSpaceRule implements InvokableRule
      */
     public function __invoke($attribute, $value, $fail)
     {
+        // value can contains only letters and space
         if(!preg_match('/^[a-z\s]+$/i', $value)) {
-            $fail('The :attribute can contains only leters and spaces');
+            $fail('The :attribute can contains only letters and spaces!');
         }
     }
 }

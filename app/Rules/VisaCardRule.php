@@ -16,8 +16,9 @@ class VisaCardRule implements InvokableRule
      */
     public function __invoke($attribute, $value, $fail)
     {
+        // value should be 16 digits starts with "4"
         if(!preg_match('/^4[0-9]{12}(?:[0-9]{3})?$/', $value)) {
-            $fail('The :attribute must be 16 digits starts with "4".');
+            $fail('The :attribute must be 16 digits starts with "4"!');
         }
     }
 }

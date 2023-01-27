@@ -16,8 +16,9 @@ class CardCvvRule implements InvokableRule
      */
     public function __invoke($attribute, $value, $fail)
     {
+        // value can contains only 3 digits
         if(!preg_match('/^[0-9]{3}$/', $value)) {
-            $fail('The :attribute can contains only 3 digits');
+            $fail('The :attribute can contains only 3 digits!');
         }
     }
 }

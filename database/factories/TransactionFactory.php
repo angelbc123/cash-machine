@@ -5,7 +5,7 @@ namespace Database\Factories;
 use App\Models\BankTransaction;
 use App\Models\CardTransaction;
 use App\Models\CashTransaction;
-use App\Models\Transaction;
+use App\Models\Interfaces\Transaction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 

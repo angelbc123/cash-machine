@@ -17,12 +17,15 @@ class ExpirationDateRule implements InvokableRule
      */
     public function __invoke($attribute, $value, $fail)
     {
+        // check value format - it should be MM/YYYY
         if(!preg_match('/^[0-1][0-9]{1,2}\/[0-9]{4}$/', $value)) {
-            $fail('The :attribute must be in (MM/YYYY) format.');
+            $fail('The :attribute must be in (MM/YYYY) format!');
             return;
         }
 
         $expirationDate = Carbon::createFromFormat('m/Y', $value)->floorMonth();
+
+        // expiration date should be bigger than 2 months from current month
         if($expirationDate->lessThan(Carbon::today()->floorMonth()->addMonths(2))) {
             $fail('The :attribute must be at least 2 months bigger than current month!');
         }

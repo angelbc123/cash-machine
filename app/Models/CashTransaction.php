@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Interfaces\Transaction;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,7 +13,11 @@ class CashTransaction extends TransactionLog implements Transaction
 {
     use HasFactory;
 
-    public function validate(): \Illuminate\Validation\Validator
+    /**
+     * @return array
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function validate(): array
     {
         return Validator::make(
             array_merge($this->inputs, ['amount' => $this->amount()]),
@@ -24,7 +29,7 @@ class CashTransaction extends TransactionLog implements Transaction
                 'banknote_100' => ['required', 'numeric'],
                 'amount' => ['required', 'numeric', 'max:10000']
             ]
-        );
+        )->validate();
     }
 
     public function amount(): float

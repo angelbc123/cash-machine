@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTransctionRequest;
 use App\Http\Requests\TransactionStoreRequest;
-use App\Models\CardTransaction;
 use App\Models\CashMachine;
-use App\Models\TransactionTypes;
 use Database\Factories\TransactionFactory;
 use Illuminate\Http\Request;
 
@@ -17,13 +14,38 @@ class TransactionController extends Controller
         return view('pages/' . $request->input('transaction') . '-transaction');
     }
 
-    public function store(TransactionStoreRequest $request, CashMachine $cashMachine)
+    /**
+     * @param TransactionStoreRequest $request
+     * @param CashMachine $cashMachine
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Exception
+     */
+    public function store(
+        TransactionStoreRequest $request,
+        CashMachine $cashMachine
+    )
     {
-        $transaction = TransactionFactory::make(
+        $transaction = $this->getTransactionContext($request);
+
+        $cashMachine->store($transaction);
+
+        return redirect()
+            ->route('success-submission')
+            ->with([
+                'transaction' => $transaction
+            ]);
+    }
+
+    /**
+     * @param TransactionStoreRequest $request
+     * @return \App\Models\Interfaces\Transaction
+     * @throws \Exception
+     */
+    protected function getTransactionContext(TransactionStoreRequest $request): \App\Models\Interfaces\Transaction
+    {
+        return TransactionFactory::make(
             $request->input('type'),
             $request
         );
-
-        return $cashMachine->store($transaction);
     }
 }

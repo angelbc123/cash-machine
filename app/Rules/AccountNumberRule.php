@@ -16,8 +16,9 @@ class AccountNumberRule implements InvokableRule
      */
     public function __invoke($attribute, $value, $fail)
     {
+        //value should be 6 alphanumeric chars
         if(!preg_match('/^[a-zA-Z0-9]{6}$/', $value)) {
-            $fail('The :attribute must be 6 alpha numeric chars.');
+            $fail('The :attribute must be 6 alpha numeric chars!');
         }
     }
 }

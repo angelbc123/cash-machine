@@ -15,6 +15,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomepageController::class, 'index']);
+Route::get('/', [HomepageController::class, 'index'])
+    ->name('home-page');
+
 Route::resource('transactions', TransactionController::class)
     ->only('create', 'store');
+
+Route::get('/success-submission', function(\Illuminate\Http\Request $request) {
+    return view('pages/success-submission');
+})
+    ->name('success-submission');

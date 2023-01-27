@@ -2,7 +2,8 @@
 
 @section('content')
     @php
-        /** @var \App\Models\Transaction $transaction */
+        /** @var \App\Models\Interfaces\Transaction $transaction */
+        $transaction = session()->get('transaction')
     @endphp
     <div class="row">
         <div class="col-md-12 mb-4">
@@ -32,6 +33,11 @@
                 @endforeach
 
             </ul>
+
+            <a href="{{ route('home-page') }}"
+               class="btn btn-secondary">
+                Back to home
+            </a>
 
         </div>
     </div>

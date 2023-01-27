@@ -19,13 +19,16 @@ class TransferDateRule implements InvokableRule
     public function __invoke($attribute, $value, $fail)
     {
 
+        // check value format - it should be MM/DD/YYYY
         if(!preg_match('/^[0-1][0-9]{1,2}\/[0-3][0-9]{1,2}\/[0-9]{4}$/', $value)) {
-            $fail('The :attribute must be in (MM/DD/YYYY) format.');
+            $fail('The :attribute must be in (MM/DD/YYYY) format!');
             return;
         }
 
-        $date = Carbon::parse($value);
-        if($date->lessThan(Carbon::today())) {
+        $transferDate = Carbon::parse($value);
+
+        // transfer date should be older than today
+        if($transferDate->lessThan(Carbon::today())) {
             $fail('The :attribute can not be older than current date!');
         }
     }
