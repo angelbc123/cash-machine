@@ -6,55 +6,69 @@ use App\Models\BankTransaction;
 use App\Models\CardTransaction;
 use App\Models\CashTransaction;
 use App\Models\Transaction;
+use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class TransactionFactory
 {
+    const CASH_TYPE = 'cash';
+    const CARD_TYPE = 'card';
+    const BANK_TYPE = 'bank';
+
     /**
-     * @param string $transactionModel
-     * @param array $data
+     * @param string $type
+     * @param Request $request
      * @return Transaction
      * @throws \Exception
      */
-    public static function make(string $transactionModel, array $data): Transaction
+    public static function make(string $type, Request $request): Transaction
     {
-        if($transactionModel === BankTransaction::class) {
-            $formattedData = Arr::only(
-                $data,
-                ['transfer_date', 'customer_name', 'account_number']
-            );
+        return match ($type) {
+            self::BANK_TYPE => self::handleBankTransaction($request),
+            self::CARD_TYPE => self::handleCardTransaction($request),
+            self::CASH_TYPE => self::handleCashTransaction($request),
+            default => throw new \Exception('No valid Transaction model')
+        };
+    }
 
-            return BankTransaction::factory()->make([
-                'amount' => data_get($data, 'amount'),
-                'inputs' => $formattedData
-            ]);
-        }
+    /**
+     * @param Request $request
+     * @return BankTransaction
+     */
+    protected static function handleBankTransaction(Request $request): BankTransaction
+    {
+        return BankTransaction::factory()->make([
+            'amount' => (float) $request->input('amount'),
+            'inputs' => $request->only(['transfer_date', 'customer_name', 'account_number'])
+        ]);
+    }
 
-        if($transactionModel === CardTransaction::class) {
-            $formattedData = Arr::only(
-                $data,
-                ['card_number', 'expiration_date', 'card_holder', 'cvv']
-            );
+    /**
+     * @param Request $request
+     * @return CardTransaction
+     */
+    protected static function handleCardTransaction(Request $request): CardTransaction
+    {
+        return CardTransaction::factory()->make([
+            'amount' => (float) $request->input('amount'),
+            'inputs' => $request->only(['card_number', 'expiration_date', 'card_holder', 'cvv'])
+        ]);
+    }
 
-            return CardTransaction::factory()->make([
-                'amount' => data_get($data, 'amount'),
-                'inputs' => $formattedData
-            ]);
-        }
+    /**
+     * @param Request $request
+     * @return CashTransaction
+     */
+    protected static function handleCashTransaction(Request $request): CashTransaction
+    {
+        $formattedData = $request->only(
+            ['banknote_1', 'banknote_5', 'banknote_10', 'banknote_50', 'banknote_100']
+        );
 
-        if($transactionModel === CashTransaction::class) {
-            $formattedData = Arr::only(
-                $data,
-                ['banknote_1', 'banknote_5', 'banknote_10', 'banknote_50', 'banknote_100']
-            );
-
-            return CashTransaction::factory()->make([
-                'amount' => array_sum($formattedData),
-                'inputs' => $formattedData
-            ]);
-        }
-
-        throw new \Exception('No valid Transaction model');
+        return CashTransaction::factory()->make([
+            'amount' => (float) array_sum($formattedData),
+            'inputs' => $formattedData
+        ]);
     }
 
 }

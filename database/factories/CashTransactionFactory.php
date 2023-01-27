@@ -17,8 +17,8 @@ class CashTransactionFactory extends Factory
     public function definition()
     {
         return [
-            'amount' => 1000,
-            'inputs' => ['cash_1' => 1, 'cash_2' => 2]
+            'amount' => null,
+            'inputs' => []
         ];
     }
 }

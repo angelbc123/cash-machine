@@ -17,8 +17,8 @@ class BankTransactionFactory extends Factory
     public function definition()
     {
         return [
-            'amount' => 1000,
-            'inputs' => ['bank_1' => 1, 'bank_2' => 2]
+            'amount' => null,
+            'inputs' => []
         ];
     }
 }

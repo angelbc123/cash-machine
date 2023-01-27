@@ -17,8 +17,8 @@ class CardTransactionFactory extends Factory
     public function definition()
     {
         return [
-            'amount' => 1000,
-            'inputs' => ['card_1' => 1, 'card_2' => 2]
+            'amount' => null,
+            'inputs' => []
         ];
     }
 }

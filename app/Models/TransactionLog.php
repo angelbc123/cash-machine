@@ -14,6 +14,8 @@ class TransactionLog extends Model
 {
     use HasFactory;
 
+    protected $table = 'transaction_logs';
+
     protected $guarded = [
         'id'
     ];

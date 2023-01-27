@@ -9,7 +9,7 @@ interface Transaction
     /**
      * Validate Inputs
      */
-    public function validate(Request $request);
+    public function validate();
 
     /**
      * Return total amount*/
