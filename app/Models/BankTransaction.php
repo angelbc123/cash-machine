@@ -2,6 +2,9 @@
 
 namespace App\Models;
 
+use App\Rules\AccountNumberRule;
+use App\Rules\AlphaAndSpaceRule;
+use App\Rules\TransferDateRule;
 use Database\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,14 +15,17 @@ class BankTransaction extends TransactionLog implements Transaction
 {
     use HasFactory;
 
-    public function validate(Request $request): \Illuminate\Validation\Validator
+    public function validate(): \Illuminate\Validation\Validator
     {
-        return Validator::make($request->all(), [
-            'transfer_date' => 'required',
-            'customer_name' => 'required',
-            'account_number' => 'required',
-            'amount' => 'required',
-        ]);
+        return Validator::make(
+            array_merge($this->inputs, ['amount' => $this->amount()]),
+            [
+                'transfer_date' => ['required', new TransferDateRule],
+                'customer_name' => ['required', new AlphaAndSpaceRule],
+                'account_number' => ['required', new AccountNumberRule],
+                'amount' => ['required', 'numeric'],
+            ]
+        );
     }
 
     public function amount(): float
