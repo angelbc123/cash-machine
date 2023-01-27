@@ -10,7 +10,15 @@
 
     </head>
     <body class="antialiased">
+
         <div class="container p-5">
+            @error('total_amount')
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    You have exceeded amount limit of {{ number_format(config('cash-machine.amount_limit'), 2, ',', '.') }}$!
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @enderror
+
             @yield('content')
         </div>
     </body>

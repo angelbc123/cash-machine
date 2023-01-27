@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransctionRequest;
+use App\Http\Requests\TransactionStoreRequest;
 use App\Models\CardTransaction;
 use App\Models\CashMachine;
 use App\Models\TransactionTypes;
@@ -16,7 +17,7 @@ class TransactionController extends Controller
         return view('pages/' . $request->input('transaction') . '-transaction');
     }
 
-    public function store(Request $request, CashMachine $cashMachine)
+    public function store(TransactionStoreRequest $request, CashMachine $cashMachine)
     {
         $transaction = TransactionFactory::make(
             $request->input('type'),
