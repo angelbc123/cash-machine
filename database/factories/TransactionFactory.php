@@ -61,14 +61,18 @@ class TransactionFactory
      */
     protected static function handleCashTransaction(Request $request): CashTransaction
     {
-        $formattedData = $request->only(
+        $amount = 0;
+        $banknotesData = $request->only(
             ['banknote_1', 'banknote_5', 'banknote_10', 'banknote_50', 'banknote_100']
         );
 
+        Arr::map($banknotesData, function($value, $key) use (&$amount) {
+            $amount += ((int) str_replace('banknote_', '', $key)) * $value;
+        });
+
         return CashTransaction::factory()->make([
-            'amount' => (float) array_sum($formattedData),
-            'inputs' => $formattedData
+            'amount' => (float) $amount,
+            'inputs' => $banknotesData
         ]);
     }
-
 }

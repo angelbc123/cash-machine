@@ -20,7 +20,7 @@
                     <div>
                         <h6 class="my-0">Amount</h6>
                     </div>
-                    <span class="text-muted">{{ number_format($transaction->amount(), 2, '.', ' ') }}</span>
+                    <span class="text-muted">{{ number_format($transaction->amount(), 2, ',', '.') }}$</span>
                 </li>
                 @foreach($transaction->inputs() as $key => $value)
                     <li class="list-group-item d-flex justify-content-between lh-condensed">

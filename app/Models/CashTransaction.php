@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
@@ -11,15 +12,19 @@ class CashTransaction extends TransactionLog implements Transaction
 {
     use HasFactory;
 
-    public function validate(Request $request): \Illuminate\Validation\Validator
+    public function validate(): \Illuminate\Validation\Validator
     {
-        return Validator::make($request->all(), [
-            'banknote_1' => 'required',
-            'banknote_5' => 'required',
-            'banknote_10' => 'required',
-            'banknote_50' => 'required',
-            'banknote_100' => 'required',
-        ]);
+        return Validator::make(
+            array_merge($this->inputs, ['amount' => $this->amount()]),
+            [
+                'banknote_1' => ['required', 'numeric'],
+                'banknote_5' => ['required', 'numeric'],
+                'banknote_10' => ['required', 'numeric'],
+                'banknote_50' => ['required', 'numeric'],
+                'banknote_100' => ['required', 'numeric'],
+                'amount' => ['required', 'numeric', 'max:10000']
+            ]
+        );
     }
 
     public function amount(): float
